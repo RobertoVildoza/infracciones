@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehículos - Sistema de Infracciones Viales</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand">
+            <i class="bi bi-shield-fill me-2" style="color:#1565c0;"></i>
+            Sistema de Infracciones Viales
+        </span>
+        <a href="/index.html" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-arrow-left me-1"></i> Inicio
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 py-4" style="max-width:1200px;">
+
+    <div class="d-flex justify-content-between align-items-center page-header-bar">
+        <div>
+            <p class="text-muted mb-0" style="font-size:0.75rem;">
+                <i class="bi bi-house me-1"></i> Inicio / Vehículos
+            </p>
+            <h1 class="page-title mb-0">Vehículos</h1>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="abrirModal()">
+            <i class="bi bi-plus-lg me-1"></i> Nuevo Vehículo
+        </button>
+    </div>
+
+    <div id="alertContainer"></div>
+
+    <div class="card section-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6><i class="bi bi-car-front me-2"></i>Registro de Vehículos</h6>
+            <span class="badge bg-secondary" id="totalBadge">0 registros</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Dominio</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Color</th>
+                        <th>Año</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">
+                            <i class="bi bi-hourglass-split me-2"></i>Cargando...
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL NUEVO/EDITAR -->
+<div class="modal fade" id="modalForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">
+                    <i class="bi bi-car-front me-2"></i>Nuevo Vehículo
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="itemId">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Dominio *</label>
+                        <input type="text" class="form-control form-control-sm" id="fDominio"
+                               placeholder="Ej: ABC123" style="text-transform:uppercase;">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Color</label>
+                        <input type="text" class="form-control form-control-sm" id="fColor" placeholder="Ej: Blanco">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Año Patentamiento</label>
+                        <input type="number" class="form-control form-control-sm" id="fAnio" placeholder="Ej: 2020">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Marca *</label>
+                        <div class="input-group input-group-sm">
+                            <select class="form-select form-select-sm" id="fMarca">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                            <button class="btn btn-outline-secondary btn-sm" type="button"
+                                    onclick="abrirModalNuevaMarca()" title="Agregar nueva marca">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Modelo *</label>
+                        <div class="input-group input-group-sm">
+                            <select class="form-select form-select-sm" id="fModelo">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                            <button class="btn btn-outline-secondary btn-sm" type="button"
+                                    onclick="abrirModalNuevoModelo()" title="Agregar nuevo modelo">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success btn-sm" onclick="guardar()">
+                    <i class="bi bi-check-lg me-1"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL NUEVA MARCA -->
+<div class="modal fade" id="modalNuevaMarca" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-plus-circle me-2"></i>Nueva Marca
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Nombre de la Marca *</label>
+                    <input type="text" class="form-control form-control-sm"
+                           id="nuevaMarcaNombre" placeholder="Ej: Peugeot">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success btn-sm"
+                        onclick="guardarNuevaMarca()">
+                    <i class="bi bi-check-lg me-1"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL NUEVO MODELO -->
+<div class="modal fade" id="modalNuevoModelo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-plus-circle me-2"></i>Nuevo Modelo
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Nombre del Modelo *</label>
+                    <input type="text" class="form-control form-control-sm"
+                           id="nuevoModeloNombre" placeholder="Ej: 208">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success btn-sm"
+                        onclick="guardarNuevoModelo()">
+                    <i class="bi bi-check-lg me-1"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMAR ELIMINAR -->
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Eliminación
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">¿Está seguro que desea eliminar este vehículo?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger btn-sm" id="btnConfirmarEliminar">
+                    <i class="bi bi-trash me-1"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/vehiculos.js"></script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Acta - Sistema de Infracciones Viales</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand">
+            <i class="bi bi-shield-fill me-2" style="color:#1565c0;"></i>
+            Sistema de Infracciones Viales
+        </span>
+        <a href="/index.html" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-arrow-left me-1"></i> Inicio
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 py-4" style="max-width:1100px;">
+
+    <div class="d-flex justify-content-between align-items-center page-header-bar">
+        <div>
+            <p class="text-muted mb-0" style="font-size:0.75rem;">
+                <i class="bi bi-house me-1"></i> Inicio / Nueva Acta
+            </p>
+            <h1 class="page-title mb-0">Nueva Acta de Constatación</h1>
+        </div>
+    </div>
+
+    <div id="alertContainer"></div>
+
+    <!-- AUTORIDAD -->
+    <div class="card section-card">
+        <div class="card-header">
+            <h6><i class="bi bi-person-badge me-2"></i>Autoridad de Constatación</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-end mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">N° de Legajo</label>
+                    <input type="number" class="form-control form-control-sm" id="legajoBuscar" placeholder="Ej: 1001">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-secondary btn-sm w-100" onclick="buscarAutoridad()">
+                        <i class="bi bi-search me-1"></i> Buscar
+                    </button>
+                </div>
+            </div>
+            <div id="alertAutoridad"></div>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control form-control-sm" id="autoridadNombre" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" class="form-control form-control-sm" id="autoridadApellido" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">DNI</label>
+                    <input type="text" class="form-control form-control-sm" id="autoridadDni" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Organización</label>
+                    <input type="text" class="form-control form-control-sm" id="autoridadOrganizacion" readonly>
+                </div>
+            </div>
+            <input type="hidden" id="autoridadId">
+            <input type="hidden" id="organizacionId">
+        </div>
+    </div>
+
+    <!-- CONDUCTOR -->
+    <div class="card section-card">
+        <div class="card-header">
+            <h6><i class="bi bi-person me-2"></i>Conductor</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-end mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Buscar por DNI</label>
+                    <input type="number" class="form-control form-control-sm" id="conductorDniBuscar" placeholder="Ej: 30123456">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-secondary btn-sm w-100" onclick="buscarConductor()">
+                        <i class="bi bi-search me-1"></i> Buscar
+                    </button>
+                </div>
+            </div>
+            <div id="alertConductor"></div>
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label">DNI *</label>
+                    <input type="number" class="form-control form-control-sm" id="conductorDni" placeholder="DNI">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" class="form-control form-control-sm" id="conductorNombre" placeholder="Nombre">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Apellido *</label>
+                    <input type="text" class="form-control form-control-sm" id="conductorApellido" placeholder="Apellido">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Género</label>
+                    <select class="form-select form-select-sm" id="conductorGenero">
+                        <option value="">Seleccionar...</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Domicilio</label>
+                    <input type="text" class="form-control form-control-sm" id="conductorDomicilio" placeholder="Domicilio">
+                </div>
+            </div>
+            <input type="hidden" id="conductorId">
+
+            <!-- LICENCIA -->
+            <hr class="my-3">
+            <h6 class="text-muted" style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.8px;">
+                <i class="bi bi-card-text me-2"></i>Licencia de Conducir
+            </h6>
+            <div id="alertLicencia"></div>
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label">Clase *</label>
+                    <select class="form-select form-select-sm" id="licenciaClase">
+                        <option value="">Clase...</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Fecha Vencimiento *</label>
+                    <input type="date" class="form-control form-control-sm" id="licenciaFechaVto">
+                </div>
+            </div>
+            <input type="hidden" id="licenciaId">
+        </div>
+    </div>
+
+    <!-- VEHÍCULO -->
+    <div class="card section-card">
+        <div class="card-header">
+            <h6><i class="bi bi-car-front me-2"></i>Vehículo</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-end mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Buscar por Dominio</label>
+                    <input type="text" class="form-control form-control-sm" id="dominioBuscar"
+                           placeholder="Ej: ABC123" style="text-transform:uppercase;">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-secondary btn-sm w-100" onclick="buscarVehiculo()">
+                        <i class="bi bi-search me-1"></i> Buscar
+                    </button>
+                </div>
+            </div>
+            <div id="alertVehiculo"></div>
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label">Dominio *</label>
+                    <input type="text" class="form-control form-control-sm" id="vehiculoDominio"
+                           placeholder="Dominio" style="text-transform:uppercase;">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Color</label>
+                    <input type="text" class="form-control form-control-sm" id="vehiculoColor" placeholder="Color">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Año</label>
+                    <input type="number" class="form-control form-control-sm" id="vehiculoAnio" placeholder="2020">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Marca *</label>
+                    <div class="input-group input-group-sm">
+                        <select class="form-select form-select-sm" id="vehiculoMarca">
+                            <option value="">Seleccionar...</option>
+                        </select>
+                        <button class="btn btn-outline-secondary btn-sm" type="button"
+                                onclick="abrirModalNuevaMarca()" title="Agregar nueva marca">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Modelo *</label>
+                    <div class="input-group input-group-sm">
+                        <select class="form-select form-select-sm" id="vehiculoModelo">
+                            <option value="">Seleccionar...</option>
+                        </select>
+                        <button class="btn btn-outline-secondary btn-sm" type="button"
+                                onclick="abrirModalNuevoModelo()" title="Agregar nuevo modelo">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="vehiculoId">
+        </div>
+    </div>
+
+    <!-- DATOS DEL ACTA -->
+    <div class="card section-card">
+        <div class="card-header">
+            <h6><i class="bi bi-file-earmark-text me-2"></i>Datos del Acta</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label">Fecha *</label>
+                    <input type="date" class="form-control form-control-sm" id="actaFecha">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Hora *</label>
+                    <input type="time" class="form-control form-control-sm" id="actaHora">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Lugar de Constatación</label>
+                    <input type="text" class="form-control form-control-sm" id="actaLugar" placeholder="Lugar">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Lugar en Ruta</label>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="toggleRuta"
+                               onchange="toggleRutaSwitch()">
+                        <label class="form-check-label" style="font-size:0.78rem;">
+                            ¿La infracción ocurrió en una ruta registrada?
+                        </label>
+                    </div>
+                    <div id="rutaSelector" style="display:none;">
+                        <div class="input-group input-group-sm">
+                            <select class="form-select form-select-sm" id="actaRuta">
+                                <option value="">Seleccionar ruta...</option>
+                            </select>
+                            <button class="btn btn-outline-secondary btn-sm" type="button"
+                                    onclick="abrirModalNuevaRuta()" title="Agregar nueva ruta">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="rutaLibre" style="display:none;">
+                        <input type="text" class="form-control form-control-sm" id="actaRutaLibre"
+                               placeholder="Ej: Acceso Sur Km 15, Mendoza">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Fecha Vto. Pago Voluntario</label>
+                    <input type="date" class="form-control form-control-sm" id="actaFechaVtoPago">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Observaciones</label>
+                    <textarea class="form-control form-control-sm" id="actaObservaciones" rows="2"
+                              placeholder="Observaciones adicionales..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFRACCIONES -->
+    <div class="card section-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6><i class="bi bi-exclamation-triangle me-2"></i>Infracciones</h6>
+            <button class="btn btn-warning btn-sm" onclick="agregarInfraccion()">
+                <i class="bi bi-plus-lg me-1"></i> Agregar Infracción
+            </button>
+        </div>
+        <div class="card-body">
+            <div id="infraccionesList">
+                <p class="text-muted text-center py-2" style="font-size:0.85rem;" id="sinInfracciones">
+                    <i class="bi bi-info-circle me-1"></i> No hay infracciones agregadas
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVA MARCA -->
+    <div class="modal fade" id="modalNuevaMarca" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle me-2"></i>Nueva Marca
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de la Marca *</label>
+                        <input type="text" class="form-control form-control-sm"
+                               id="nuevaMarcaNombre" placeholder="Ej: Peugeot">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm"
+                            data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="guardarNuevaMarca()">
+                        <i class="bi bi-check-lg me-1"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVO MODELO -->
+    <div class="modal fade" id="modalNuevoModelo" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle me-2"></i>Nuevo Modelo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del Modelo *</label>
+                        <input type="text" class="form-control form-control-sm"
+                               id="nuevoModeloNombre" placeholder="Ej: 208">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm"
+                            data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="guardarNuevoModelo()">
+                        <i class="bi bi-check-lg me-1"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVO TIPO DE INFRACCIÓN -->
+    <div class="modal fade" id="modalNuevoTipo" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle me-2"></i>Nuevo Tipo de Infracción
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Código *</label>
+                            <input type="text" class="form-control form-control-sm"
+                                   id="nuevoTipoCodigo" placeholder="Ej: VEL002">
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Descripción *</label>
+                            <input type="text" class="form-control form-control-sm"
+                                   id="nuevoTipoDesc" placeholder="Descripción de la infracción">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm"
+                            data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="guardarNuevoTipo()">
+                        <i class="bi bi-check-lg me-1"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVA RUTA -->
+    <div class="modal fade" id="modalNuevaRuta" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle me-2"></i>Nueva Ruta
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-7">
+                            <label class="form-label">Nombre *</label>
+                            <input type="text" class="form-control form-control-sm"
+                                   id="nuevaRutaNombre" placeholder="Ej: Ruta Nacional 40">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">Kilómetro</label>
+                            <input type="text" class="form-control form-control-sm"
+                                   id="nuevaRutaKm" placeholder="Ej: Km 500">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Tipo de Ruta *</label>
+                            <select class="form-select form-select-sm" id="nuevaRutaTipo">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm"
+                            data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="guardarNuevaRuta()">
+                        <i class="bi bi-check-lg me-1"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTONES FINALES -->
+    <div class="d-flex justify-content-end gap-2 mb-4">
+        <a href="/index.html" class="btn btn-secondary btn-sm">
+            <i class="bi bi-x-lg me-1"></i> Cancelar
+        </a>
+        <button class="btn btn-success btn-sm" onclick="guardarActa()">
+            <i class="bi bi-check-lg me-1"></i> Guardar Acta
+        </button>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/nueva-acta.js"></script>
+</body>
+</html>

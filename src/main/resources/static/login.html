@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Sistema de Infracciones Viales</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="login-body">
+
+<div class="login-wrapper">
+
+    <div class="login-logo">
+        <div class="shield-icon"><i class="bi bi-shield-fill"></i></div>
+        <h1>Sistema de Infracciones Viales</h1>
+        <p>Acceso restringido al personal autorizado</p>
+    </div>
+
+    <div class="login-card">
+        <div id="alertContainer">
+            <div id="errorMsg" style="display:none;" class="alert alert-danger" style="font-size:0.82rem;">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Usuario o contraseña incorrectos.
+            </div>
+            <div id="logoutMsg" style="display:none;" class="alert alert-success" style="font-size:0.82rem;">
+                <i class="bi bi-check-circle me-2"></i>
+                Sesión cerrada correctamente.
+            </div>
+        </div>
+
+        <form method="POST" action="/login">
+            <div class="mb-3">
+                <label class="form-label">Usuario</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" class="form-control" name="username"
+                           placeholder="Ingrese su usuario" autofocus required>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Contraseña</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control" name="password"
+                           placeholder="Ingrese su contraseña" required>
+                    <button class="btn btn-outline-secondary" type="button" id="togglePass">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-login">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="login-footer">
+        Sistema de Infracciones Viales &copy; 2026 &mdash; Todos los derechos reservados
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+package com.example.infracciones.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class TipoDeInfraccionDTO {
+    private Long id;
+    private String codigo;
+    private String descripcion;
+}

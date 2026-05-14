@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actas - Sistema de Infracciones Viales</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand">
+            <i class="bi bi-shield-fill me-2" style="color:#1565c0;"></i>
+            Sistema de Infracciones Viales
+        </span>
+        <a href="/index.html" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-arrow-left me-1"></i> Inicio
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid px-4 py-4" style="max-width:1200px;">
+
+    <div class="d-flex justify-content-between align-items-center page-header-bar">
+        <div>
+            <p class="text-muted mb-0" style="font-size:0.75rem;">
+                <i class="bi bi-house me-1"></i> Inicio / Actas
+            </p>
+            <h1 class="page-title mb-0">Actas de Constatación</h1>
+        </div>
+        <a href="/pages/nueva-acta.html" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Nueva Acta
+        </a>
+    </div>
+
+    <div id="alertContainer"></div>
+
+    <div class="card section-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6><i class="bi bi-folder2-open me-2"></i>Listado de Actas Registradas</h6>
+            <span class="badge bg-secondary" id="totalBadge">0 registros</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Lugar</th>
+                        <th>Autoridad</th>
+                        <th>Conductor</th>
+                        <th>Vehículo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="actasBody">
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted">
+                            <i class="bi bi-hourglass-split me-2"></i>Cargando...
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL CONFIRMAR ELIMINAR -->
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">¿Está seguro que desea eliminar esta acta? Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger btn-sm" id="btnConfirmarEliminar">
+                    <i class="bi bi-trash me-1"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/actas.js"></script>
+</body>
+</html>
