@@ -124,6 +124,14 @@ function validarConductor() {
         limpiarError('fApellido');
     }
 
+    const domicilio = document.getElementById('fDomicilio').value.trim();
+    if (domicilio && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\.\,\-]+$/.test(domicilio)) {
+        mostrarError('fDomicilio', 'El domicilio contiene caracteres no válidos.');
+        valido = false;
+    } else {
+        limpiarError('fDomicilio');
+    }
+
     return valido;
 }
 

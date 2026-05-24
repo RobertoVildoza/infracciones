@@ -175,12 +175,15 @@ async function guardarSimple() {
         return;
     }
 
-    // Tipos de ruta y organizaciones: solo letras
-    // Marcas y modelos: letras y números
     const soloLetras = ['/tipo-rutas', '/organizaciones', '/estados-acta'];
     if (soloLetras.includes(msEndpoint)) {
         if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/.test(nombre)) {
             mostrarError('msNombre', 'El nombre solo puede contener letras.');
+            return;
+        }
+    } else if (msEndpoint === '/marcas') {
+        if (!/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-\.]+$/.test(nombre)) {
+            mostrarError('msNombre', 'El nombre solo puede contener letras, números y espacios, y debe incluir al menos una letra.');
             return;
         }
     } else {
@@ -228,7 +231,6 @@ async function guardarRuta() {
         mostrarError('mrNombre', 'El nombre es obligatorio.');
         valido = false;
     } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/.test(nombre)) {
-        // Solo letras para nombre de ruta
         mostrarError('mrNombre', 'El nombre solo puede contener letras.');
         valido = false;
     } else {
@@ -334,7 +336,6 @@ async function guardarTipoInfraccion() {
         mostrarError('mtiDesc', 'La descripción es obligatoria.');
         valido = false;
     } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-\.]+$/.test(descripcion)) {
-        // Letras, números, espacios, guiones y puntos para descripciones
         mostrarError('mtiDesc', 'La descripción contiene caracteres no válidos.');
         valido = false;
     } else {

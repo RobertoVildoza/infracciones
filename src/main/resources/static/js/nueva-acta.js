@@ -243,6 +243,14 @@ function validarConductorActa() {
         limpiarErrorActa('conductorApellido');
     }
 
+    const domicilio = document.getElementById('conductorDomicilio').value.trim();
+    if (domicilio && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\.\,\-]+$/.test(domicilio)) {
+        mostrarErrorActa('conductorDomicilio', 'El domicilio contiene caracteres no válidos.');
+        valido = false;
+    } else {
+        limpiarErrorActa('conductorDomicilio');
+    }
+
     return valido;
 }
 
@@ -259,6 +267,14 @@ function validarVehiculoActa() {
         valido = false;
     } else {
         limpiarErrorActa('vehiculoDominio');
+    }
+
+    const color = document.getElementById('vehiculoColor').value.trim();
+    if (color && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(color)) {
+        mostrarErrorActa('vehiculoColor', 'El color solo puede contener letras.');
+        valido = false;
+    } else {
+        limpiarErrorActa('vehiculoColor');
     }
 
     const anio = document.getElementById('vehiculoAnio').value.trim();
@@ -309,12 +325,22 @@ function validarFormulario() {
         errores.push('Verifique los datos del vehículo.');
     }
 
-    if (!document.getElementById('actaFecha').value) {
+    const fechaActa = document.getElementById('actaFecha').value;
+    if (!fechaActa) {
         errores.push('Debe ingresar la fecha del acta.');
+    } else if (fechaActa > new Date().toISOString().split('T')[0]) {
+        errores.push('La fecha del acta no puede ser futura.');
     }
+
     if (!document.getElementById('actaHora').value) {
         errores.push('Debe ingresar la hora del acta.');
     }
+
+    const fechaVtoPago = document.getElementById('actaFechaVtoPago').value;
+    if (fechaVtoPago && fechaVtoPago < new Date().toISOString().split('T')[0]) {
+        errores.push('La fecha de vencimiento de pago voluntario no puede ser pasada.');
+    }
+
     if (!document.getElementById('organizacionId').value) {
         errores.push('La autoridad debe tener una organización asociada.');
     }
@@ -502,9 +528,13 @@ function abrirModalNuevaMarca() {
 
 async function guardarNuevaMarca() {
     const nombre = document.getElementById('nuevaMarcaNombre').value.trim();
-    if (!nombre) { showAlert('alertContainer', 'Ingrese un nombre para la marca.', 'error'); return; }
-    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
-        showAlert('alertContainer', 'El nombre contiene caracteres no válidos.', 'error'); return;
+    if (!nombre) {
+        showAlert('alertContainer', 'Ingrese un nombre para la marca.', 'error');
+        return;
+    }
+    if (!/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
+        showAlert('alertContainer', 'El nombre de la marca debe contener al menos una letra.', 'error');
+        return;
     }
     try {
         const marca = await api.post('/marcas', { nombre });
@@ -526,9 +556,13 @@ function abrirModalNuevoModelo() {
 
 async function guardarNuevoModelo() {
     const nombre = document.getElementById('nuevoModeloNombre').value.trim();
-    if (!nombre) { showAlert('alertContainer', 'Ingrese un nombre para el modelo.', 'error'); return; }
+    if (!nombre) {
+        showAlert('alertContainer', 'Ingrese un nombre para el modelo.', 'error');
+        return;
+    }
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
-        showAlert('alertContainer', 'El nombre contiene caracteres no válidos.', 'error'); return;
+        showAlert('alertContainer', 'El nombre del modelo contiene caracteres no válidos.', 'error');
+        return;
     }
     try {
         const modelo = await api.post('/modelos', { nombre });
@@ -558,10 +592,12 @@ async function guardarNuevoTipo() {
     const codigo = document.getElementById('nuevoTipoCodigo').value.trim();
     const descripcion = document.getElementById('nuevoTipoDesc').value.trim();
     if (!codigo || !descripcion) {
-        showAlert('alertContainer', 'Complete el código y la descripción.', 'error'); return;
+        showAlert('alertContainer', 'Complete el código y la descripción.', 'error');
+        return;
     }
     if (!/^[a-zA-Z0-9]+$/.test(codigo)) {
-        showAlert('alertContainer', 'El código solo puede contener letras y números sin espacios.', 'error'); return;
+        showAlert('alertContainer', 'El código solo puede contener letras y números sin espacios.', 'error');
+        return;
     }
     try {
         const tipo = await api.post('/tipos-infraccion', { codigo, descripcion });

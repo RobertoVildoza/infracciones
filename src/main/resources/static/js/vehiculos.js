@@ -115,6 +115,14 @@ function validarVehiculo() {
         limpiarError('fDominio');
     }
 
+    const color = document.getElementById('fColor').value.trim();
+    if (color && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(color)) {
+        mostrarError('fColor', 'El color solo puede contener letras.');
+        valido = false;
+    } else {
+        limpiarError('fColor');
+    }
+
     const anio = document.getElementById('fAnio').value.trim();
     if (anio && !/^\d{4}$/.test(anio)) {
         mostrarError('fAnio', 'El año debe ser un número de 4 dígitos.');
@@ -169,7 +177,7 @@ function confirmarEliminar(id) {
     modalEliminar.show();
 }
 
-// MARCA Y MODELO DESDE VEHÍCULOS
+// MARCA
 function abrirModalNuevaMarca() {
     if (!modalNuevaMarca) modalNuevaMarca = new bootstrap.Modal(document.getElementById('modalNuevaMarca'));
     document.getElementById('nuevaMarcaNombre').value = '';
@@ -178,9 +186,12 @@ function abrirModalNuevaMarca() {
 
 async function guardarNuevaMarca() {
     const nombre = document.getElementById('nuevaMarcaNombre').value.trim();
-    if (!nombre) { showAlert('alertContainer', 'Ingrese un nombre para la marca.', 'error'); return; }
-    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
-        showAlert('alertContainer', 'El nombre de la marca contiene caracteres no válidos.', 'error');
+    if (!nombre) {
+        showAlert('alertContainer', 'Ingrese un nombre para la marca.', 'error');
+        return;
+    }
+    if (!/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
+        showAlert('alertContainer', 'El nombre de la Marca solo puede contener letras, números y espacios, y debe incluir al menos una letra.', 'error');
         return;
     }
     try {
@@ -195,6 +206,7 @@ async function guardarNuevaMarca() {
     }
 }
 
+// MODELO
 function abrirModalNuevoModelo() {
     if (!modalNuevoModelo) modalNuevoModelo = new bootstrap.Modal(document.getElementById('modalNuevoModelo'));
     document.getElementById('nuevoModeloNombre').value = '';
@@ -203,7 +215,10 @@ function abrirModalNuevoModelo() {
 
 async function guardarNuevoModelo() {
     const nombre = document.getElementById('nuevoModeloNombre').value.trim();
-    if (!nombre) { showAlert('alertContainer', 'Ingrese un nombre para el modelo.', 'error'); return; }
+    if (!nombre) {
+        showAlert('alertContainer', 'Ingrese un nombre para el modelo.', 'error');
+        return;
+    }
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
         showAlert('alertContainer', 'El nombre del modelo contiene caracteres no válidos.', 'error');
         return;
@@ -224,7 +239,6 @@ function mostrarError(inputId, mensaje) {
     const input = document.getElementById(inputId);
     input.classList.add('is-invalid');
     input.classList.remove('is-valid');
-    // Buscar feedback específico por id primero, sino en parentNode
     let feedback = document.getElementById(`${inputId}-feedback`)
         || input.parentNode.querySelector('.invalid-feedback');
     if (!feedback) {

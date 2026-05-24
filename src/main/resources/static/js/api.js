@@ -5,9 +5,7 @@ let usuarioAutoridad = null;
 
 const api = {
     get: async (url) => {
-        const res = await fetch(`${API_BASE}${url}`, {
-            credentials: 'include'
-        });
+        const res = await fetch(`${API_BASE}${url}`, { credentials: 'include' });
         if (res.status === 401) { window.location.href = '/login.html'; return; }
         if (!res.ok) throw new Error(await res.text());
         return res.json();
@@ -47,9 +45,7 @@ const api = {
 
 async function verificarSesion() {
     try {
-        const res = await fetch('/api/auth/check', {
-            credentials: 'include'
-        });
+        const res = await fetch('/api/auth/check', { credentials: 'include' });
         const data = await res.json();
         if (!data.autenticado) {
             window.location.href = '/login.html';
@@ -75,7 +71,8 @@ function getAutoridadUsuario() {
 function showAlert(containerId, message, type = 'success') {
     const container = document.getElementById(containerId);
     if (!container) return;
-    container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+    const bsType = type === 'error' ? 'danger' : type;
+    container.innerHTML = `<div class="alert alert-${bsType}">${message}</div>`;
     setTimeout(() => container.innerHTML = '', 4000);
 }
 

@@ -8,10 +8,10 @@ Sistema web para la gestión y registro de actas de constatación de infraccione
 
 **Backend**
 - Java 17
-- Spring Boot 4.0.6
-- Spring Security 7
+- Spring Boot
+- Spring Security
 - Spring Data JPA
-- Hibernate 7 + Hibernate Envers (auditoría)
+- Hibernate 7
 - MySQL 8
 - Lombok
 
@@ -203,4 +203,4 @@ infracciones_spring/
 ## Autor
 
 **Roberto Ezequiel Vildoza**  
-Proyecto académico — 2026
+Instituto Tecnologico Universitario (ITU) — 2026
