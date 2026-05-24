@@ -55,10 +55,6 @@ WHERE NOT EXISTS (SELECT 1 FROM autoridad_de_constatacion WHERE id_legajo = 1003
 INSERT INTO rol_usuario (nombre) SELECT 'ADMIN' WHERE NOT EXISTS (SELECT 1 FROM rol_usuario WHERE nombre = 'ADMIN');
 INSERT INTO rol_usuario (nombre) SELECT 'AUTORIDAD' WHERE NOT EXISTS (SELECT 1 FROM rol_usuario WHERE nombre = 'AUTORIDAD');
 
--- Roles
-INSERT INTO rol_usuario (nombre) SELECT 'ADMIN' WHERE NOT EXISTS (SELECT 1 FROM rol_usuario WHERE nombre = 'ADMIN');
-INSERT INTO rol_usuario (nombre) SELECT 'AUTORIDAD' WHERE NOT EXISTS (SELECT 1 FROM rol_usuario WHERE nombre = 'AUTORIDAD');
-
 -- Usuarios
 INSERT INTO usuario (username, password, nombre, apellido, activo, rol_id)
 SELECT 'admin', '$2a$10$8DLqnchJCoT1G7DRePhR8.r3MILhS2RBdfjmQYp49plibF8e0qoTq', 'Administrador', 'Sistema', true, 1

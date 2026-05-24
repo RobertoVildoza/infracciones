@@ -12,6 +12,8 @@ window.onload = async () => {
         document.getElementById('btnNuevo')?.remove();
     }
 
+    document.getElementById('navUsuario').textContent = usuario.username;
+
     document.getElementById('btnConfirmarEliminar').addEventListener('click', async () => {
         try {
             await api.delete(`/conductores/${idAEliminar}`);
@@ -66,6 +68,7 @@ async function cargar() {
 }
 
 function abrirModal() {
+    limpiarTodosLosErrores();
     document.getElementById('modalTitle').innerHTML = '<i class="bi bi-person-plus me-2"></i>Nuevo Conductor';
     document.getElementById('itemId').value = '';
     ['fDni','fNombre','fApellido','fDomicilio'].forEach(id => document.getElementById(id).value = '');
@@ -74,6 +77,7 @@ function abrirModal() {
 }
 
 function editar(id, dni, nombre, apellido, genero, domicilio) {
+    limpiarTodosLosErrores();
     document.getElementById('modalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Conductor';
     document.getElementById('itemId').value = id;
     document.getElementById('fDni').value = dni;
@@ -84,7 +88,48 @@ function editar(id, dni, nombre, apellido, genero, domicilio) {
     modalForm.show();
 }
 
+function validarConductor() {
+    let valido = true;
+
+    const dni = document.getElementById('fDni').value.trim();
+    if (!dni) {
+        mostrarError('fDni', 'El DNI es obligatorio.');
+        valido = false;
+    } else if (!/^\d+$/.test(dni)) {
+        mostrarError('fDni', 'El DNI solo puede contener números.');
+        valido = false;
+    } else {
+        limpiarError('fDni');
+    }
+
+    const nombre = document.getElementById('fNombre').value.trim();
+    if (!nombre) {
+        mostrarError('fNombre', 'El nombre es obligatorio.');
+        valido = false;
+    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nombre)) {
+        mostrarError('fNombre', 'El nombre solo puede contener letras.');
+        valido = false;
+    } else {
+        limpiarError('fNombre');
+    }
+
+    const apellido = document.getElementById('fApellido').value.trim();
+    if (!apellido) {
+        mostrarError('fApellido', 'El apellido es obligatorio.');
+        valido = false;
+    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(apellido)) {
+        mostrarError('fApellido', 'El apellido solo puede contener letras.');
+        valido = false;
+    } else {
+        limpiarError('fApellido');
+    }
+
+    return valido;
+}
+
 async function guardar() {
+    if (!validarConductor()) return;
+
     const id = document.getElementById('itemId').value;
     const data = {
         dni: parseInt(document.getElementById('fDni').value),
@@ -109,4 +154,31 @@ function cerrarModal() { modalForm.hide(); }
 function confirmarEliminar(id) {
     idAEliminar = id;
     modalEliminar.show();
+}
+
+function mostrarError(inputId, mensaje) {
+    const input = document.getElementById(inputId);
+    input.classList.add('is-invalid');
+    input.classList.remove('is-valid');
+    let feedback = input.parentNode.querySelector('.invalid-feedback');
+    if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.className = 'invalid-feedback';
+        input.parentNode.appendChild(feedback);
+    }
+    feedback.textContent = mensaje;
+}
+
+function limpiarError(inputId) {
+    const input = document.getElementById(inputId);
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+    const feedback = input.parentNode.querySelector('.invalid-feedback');
+    if (feedback) feedback.textContent = '';
+}
+
+function limpiarTodosLosErrores() {
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    document.querySelectorAll('.is-valid').forEach(el => el.classList.remove('is-valid'));
+    document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
 }

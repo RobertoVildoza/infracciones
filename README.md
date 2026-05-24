@@ -44,6 +44,11 @@ security/     → Configuración de Spring Security y autenticación
 El frontend es estático (`src/main/resources/static/`) y consume la API REST mediante `fetch`. No utiliza Thymeleaf ni ningún motor de plantillas.
 
 ---
+## Diagrama UML
+
+![Diagrama UML](docs/img.png)
+
+---
 
 ## Requisitos previos
 
@@ -169,6 +174,8 @@ Modificar `username` y `password` según la configuración local de MySQL.
 
 ```
 infracciones_spring/
+├── docs/
+│   └── img.png 
 ├── src/
 │   ├── main/
 │   │   ├── java/com/example/infracciones/

@@ -9,6 +9,8 @@ window.onload = async () => {
     modalForm = new bootstrap.Modal(document.getElementById('modalForm'));
     modalEliminar = new bootstrap.Modal(document.getElementById('modalEliminar'));
 
+    document.getElementById('navUsuario').textContent = usuario.username;
+
     if (!esAdmin()) {
         document.getElementById('btnNuevo')?.remove();
     }
@@ -78,6 +80,7 @@ async function cargar() {
 }
 
 function abrirModal() {
+    limpiarTodosLosErrores();
     document.getElementById('modalTitle').innerHTML = '<i class="bi bi-car-front me-2"></i>Nuevo Vehículo';
     document.getElementById('itemId').value = '';
     ['fDominio','fColor','fAnio'].forEach(id => document.getElementById(id).value = '');
@@ -87,6 +90,7 @@ function abrirModal() {
 }
 
 function editar(v) {
+    limpiarTodosLosErrores();
     document.getElementById('modalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Vehículo';
     document.getElementById('itemId').value = v.id;
     document.getElementById('fDominio').value = v.dominio;
@@ -97,7 +101,48 @@ function editar(v) {
     modalForm.show();
 }
 
+function validarVehiculo() {
+    let valido = true;
+
+    const dominio = document.getElementById('fDominio').value.trim();
+    if (!dominio) {
+        mostrarError('fDominio', 'El dominio es obligatorio.');
+        valido = false;
+    } else if (!/^[a-zA-Z0-9]+$/.test(dominio)) {
+        mostrarError('fDominio', 'El dominio solo puede contener letras y números.');
+        valido = false;
+    } else {
+        limpiarError('fDominio');
+    }
+
+    const anio = document.getElementById('fAnio').value.trim();
+    if (anio && !/^\d{4}$/.test(anio)) {
+        mostrarError('fAnio', 'El año debe ser un número de 4 dígitos.');
+        valido = false;
+    } else {
+        limpiarError('fAnio');
+    }
+
+    if (!document.getElementById('fMarca').value) {
+        mostrarError('fMarca', 'Debe seleccionar una marca.');
+        valido = false;
+    } else {
+        limpiarError('fMarca');
+    }
+
+    if (!document.getElementById('fModelo').value) {
+        mostrarError('fModelo', 'Debe seleccionar un modelo.');
+        valido = false;
+    } else {
+        limpiarError('fModelo');
+    }
+
+    return valido;
+}
+
 async function guardar() {
+    if (!validarVehiculo()) return;
+
     const id = document.getElementById('itemId').value;
     const data = {
         dominio: document.getElementById('fDominio').value.toUpperCase(),
@@ -134,6 +179,10 @@ function abrirModalNuevaMarca() {
 async function guardarNuevaMarca() {
     const nombre = document.getElementById('nuevaMarcaNombre').value.trim();
     if (!nombre) { showAlert('alertContainer', 'Ingrese un nombre para la marca.', 'error'); return; }
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
+        showAlert('alertContainer', 'El nombre de la marca contiene caracteres no válidos.', 'error');
+        return;
+    }
     try {
         const marca = await api.post('/marcas', { nombre });
         const sel = document.getElementById('fMarca');
@@ -155,6 +204,10 @@ function abrirModalNuevoModelo() {
 async function guardarNuevoModelo() {
     const nombre = document.getElementById('nuevoModeloNombre').value.trim();
     if (!nombre) { showAlert('alertContainer', 'Ingrese un nombre para el modelo.', 'error'); return; }
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
+        showAlert('alertContainer', 'El nombre del modelo contiene caracteres no válidos.', 'error');
+        return;
+    }
     try {
         const modelo = await api.post('/modelos', { nombre });
         const sel = document.getElementById('fModelo');
@@ -165,4 +218,38 @@ async function guardarNuevoModelo() {
     } catch {
         showAlert('alertContainer', 'Error al guardar el modelo. Puede que ya exista.', 'error');
     }
+}
+
+function mostrarError(inputId, mensaje) {
+    const input = document.getElementById(inputId);
+    input.classList.add('is-invalid');
+    input.classList.remove('is-valid');
+    // Buscar feedback específico por id primero, sino en parentNode
+    let feedback = document.getElementById(`${inputId}-feedback`)
+        || input.parentNode.querySelector('.invalid-feedback');
+    if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.className = 'invalid-feedback';
+        input.parentNode.appendChild(feedback);
+    }
+    feedback.textContent = mensaje;
+    feedback.style.display = 'block';
+}
+
+function limpiarError(inputId) {
+    const input = document.getElementById(inputId);
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+    const feedback = document.getElementById(`${inputId}-feedback`)
+        || input.parentNode.querySelector('.invalid-feedback');
+    if (feedback) {
+        feedback.textContent = '';
+        feedback.style.display = 'none';
+    }
+}
+
+function limpiarTodosLosErrores() {
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    document.querySelectorAll('.is-valid').forEach(el => el.classList.remove('is-valid'));
+    document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
 }
