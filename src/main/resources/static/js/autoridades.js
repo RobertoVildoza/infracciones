@@ -189,7 +189,7 @@ async function guardar() {
         showAlert('alertContainer', 'Autoridad guardada correctamente.', 'success');
         await cargar();
     } catch {
-        showAlert('alertContainer', 'Error al guardar.', 'error');
+        showAlert('alertModal', 'Ya existe una autoridad con ese legajo, placa o DNI.', 'error');
     }
 }
 

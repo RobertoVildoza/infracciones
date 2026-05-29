@@ -13,7 +13,10 @@ window.onload = async () => {
     await cargarTiposInfraccion();
 
     const now = new Date();
-    document.getElementById('actaFecha').value = now.toISOString().split('T')[0];
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    document.getElementById('actaFecha').value = `${yyyy}-${mm}-${dd}`;
     document.getElementById('actaHora').value = now.toTimeString().slice(0, 5);
 
     const autoridad = getAutoridadUsuario();
@@ -113,7 +116,6 @@ async function cargarLicencias(conductorId) {
         const inputVto = document.getElementById('licenciaFechaVto');
 
         if (licencias.length > 0) {
-            // Si hay más de una, poblar el select con todas
             sel.innerHTML = '';
             licencias.forEach(lic => {
                 const opt = document.createElement('option');
@@ -124,7 +126,6 @@ async function cargarLicencias(conductorId) {
                 sel.appendChild(opt);
             });
 
-            // Precargar los campos con la primera opción
             const primera = licencias[0];
             inputId.value = primera.id;
             inputVto.value = primera.fechaVto;
@@ -151,7 +152,7 @@ async function cargarLicencias(conductorId) {
 async function buscarVehiculo() {
     const dominio = document.getElementById('dominioBuscar').value.trim().toUpperCase();
     if (!dominio) { showAlert('alertVehiculo', 'Ingrese un dominio.', 'error'); return; }
-    if (!/^[a-zA-Z0-9]+$/.test(dominio)) { showAlert('alertVehiculo', 'El dominio solo puede contener letras y números.', 'error'); return; }
+    if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(dominio)) { showAlert('alertVehiculo', 'El dominio debe contener al menos una letra (Ej: ABC123).', 'error'); return; }
     try {
         const vehiculo = await api.get(`/vehiculos/dominio/${dominio}`);
         document.getElementById('vehiculoId').value = vehiculo.id;
@@ -235,11 +236,12 @@ function eliminarInfraccion(id) {
 function validarConductorActa() {
     let valido = true;
 
-    const dni = document.getElementById('conductorDni').value.trim();
-    if (!dni) {
+    const dniRaw = document.getElementById('conductorDni').value;
+    const dni = dniRaw.trim();
+    if (!dniRaw && !dni) {
         mostrarErrorActa('conductorDni', 'El DNI es obligatorio.');
         valido = false;
-    } else if (!/^\d+$/.test(dni)) {
+    } else if (!dni || !/^\d+$/.test(dniRaw)) {
         mostrarErrorActa('conductorDni', 'El DNI solo puede contener números.');
         valido = false;
     } else {
@@ -269,8 +271,8 @@ function validarConductorActa() {
     }
 
     const domicilio = document.getElementById('conductorDomicilio').value.trim();
-    if (domicilio && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\.\,\-]+$/.test(domicilio)) {
-        mostrarErrorActa('conductorDomicilio', 'El domicilio contiene caracteres no válidos.');
+    if (domicilio && (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\.\,\-]+$/.test(domicilio) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(domicilio))) {
+        mostrarErrorActa('conductorDomicilio', 'El domicilio debe contener al menos una letra.');
         valido = false;
     } else {
         limpiarErrorActa('conductorDomicilio');
@@ -287,8 +289,8 @@ function validarVehiculoActa() {
     if (!dominio) {
         mostrarErrorActa('vehiculoDominio', 'El dominio es obligatorio.');
         valido = false;
-    } else if (!/^[a-zA-Z0-9]+$/.test(dominio)) {
-        mostrarErrorActa('vehiculoDominio', 'El dominio solo puede contener letras y números.');
+    } else if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(dominio)) {
+        mostrarErrorActa('vehiculoDominio', 'El dominio debe contener al menos una letra (Ej: ABC123).');
         valido = false;
     } else {
         limpiarErrorActa('vehiculoDominio');
@@ -303,8 +305,9 @@ function validarVehiculoActa() {
     }
 
     const anio = document.getElementById('vehiculoAnio').value.trim();
-    if (anio && !/^\d{4}$/.test(anio)) {
-        mostrarErrorActa('vehiculoAnio', 'El año debe ser un número de 4 dígitos.');
+    const anioActual = new Date().getFullYear();
+    if (anio && (!/^\d{4}$/.test(anio) || parseInt(anio) < 1900 || parseInt(anio) > anioActual)) {
+        mostrarErrorActa('vehiculoAnio', `El año debe estar entre 1900 y ${anioActual}.`);
         valido = false;
     } else {
         limpiarErrorActa('vehiculoAnio');
@@ -508,20 +511,20 @@ async function guardarNuevaRuta() {
     let valido = true;
 
     if (!nombre) {
-        showAlert('alertContainer', 'El nombre de la ruta es obligatorio.', 'error');
+        showAlert('alertModalRuta', 'El nombre de la ruta es obligatorio.', 'error');
         valido = false;
-    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/.test(nombre)) {
-        showAlert('alertContainer', 'El nombre de la ruta solo puede contener letras.', 'error');
+    } else if (!/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]+$/.test(nombre)) {
+        showAlert('alertModalRuta', 'El nombre de la ruta solo puede contener letras, números y guiones.', 'error');
         valido = false;
     }
 
     if (km && !/^[a-zA-Z0-9\s]+$/.test(km)) {
-        showAlert('alertContainer', 'El kilómetro contiene caracteres no válidos.', 'error');
+        showAlert('alertModalRuta', 'El kilómetro contiene caracteres no válidos.', 'error');
         valido = false;
     }
 
     if (!tipoId) {
-        showAlert('alertContainer', 'Debe seleccionar un tipo de ruta.', 'error');
+        showAlert('alertModalRuta', 'Debe seleccionar un tipo de ruta.', 'error');
         valido = false;
     }
 
@@ -538,7 +541,7 @@ async function guardarNuevaRuta() {
         modalNuevaRuta.hide();
         showAlert('alertContainer', `Ruta "${ruta.nombre}" agregada correctamente.`, 'success');
     } catch {
-        showAlert('alertContainer', 'Error al guardar la ruta.', 'error');
+        showAlert('alertModalRuta', 'Error al guardar la ruta.', 'error');
     }
 }
 
@@ -554,11 +557,11 @@ function abrirModalNuevaMarca() {
 async function guardarNuevaMarca() {
     const nombre = document.getElementById('nuevaMarcaNombre').value.trim();
     if (!nombre) {
-        showAlert('alertContainer', 'Ingrese un nombre para la marca.', 'error');
+        showAlert('alertModalMarca', 'Ingrese un nombre para la marca.', 'error');
         return;
     }
     if (!/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
-        showAlert('alertContainer', 'El nombre de la marca debe contener al menos una letra.', 'error');
+        showAlert('alertModalMarca', 'El nombre de la marca debe contener al menos una letra.', 'error');
         return;
     }
     try {
@@ -569,7 +572,7 @@ async function guardarNuevaMarca() {
         modalNuevaMarca.hide();
         showAlert('alertContainer', `Marca "${marca.nombre}" agregada correctamente.`, 'success');
     } catch {
-        showAlert('alertContainer', 'Error al guardar la marca.', 'error');
+        showAlert('alertModalMarca', 'Error al guardar la marca. Puede que ya exista.', 'error');
     }
 }
 
@@ -582,11 +585,11 @@ function abrirModalNuevoModelo() {
 async function guardarNuevoModelo() {
     const nombre = document.getElementById('nuevoModeloNombre').value.trim();
     if (!nombre) {
-        showAlert('alertContainer', 'Ingrese un nombre para el modelo.', 'error');
+        showAlert('alertModalModelo', 'Ingrese un nombre para el modelo.', 'error');
         return;
     }
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/.test(nombre)) {
-        showAlert('alertContainer', 'El nombre del modelo contiene caracteres no válidos.', 'error');
+        showAlert('alertModalModelo', 'El nombre del modelo contiene caracteres no válidos.', 'error');
         return;
     }
     try {
@@ -597,7 +600,7 @@ async function guardarNuevoModelo() {
         modalNuevoModelo.hide();
         showAlert('alertContainer', `Modelo "${modelo.nombre}" agregado correctamente.`, 'success');
     } catch {
-        showAlert('alertContainer', 'Error al guardar el modelo.', 'error');
+        showAlert('alertModalModelo', 'Error al guardar el modelo. Puede que ya exista.', 'error');
     }
 }
 
@@ -617,11 +620,15 @@ async function guardarNuevoTipo() {
     const codigo = document.getElementById('nuevoTipoCodigo').value.trim();
     const descripcion = document.getElementById('nuevoTipoDesc').value.trim();
     if (!codigo || !descripcion) {
-        showAlert('alertContainer', 'Complete el código y la descripción.', 'error');
+        showAlert('alertModalTipo', 'Complete el código y la descripción.', 'error');
         return;
     }
-    if (!/^[a-zA-Z0-9]+$/.test(codigo)) {
-        showAlert('alertContainer', 'El código solo puede contener letras y números sin espacios.', 'error');
+    if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(codigo)) {
+        showAlert('alertModalTipo', 'El código debe contener al menos una letra (Ej: VEL001).', 'error');
+        return;
+    }
+    if (!/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-\.]+$/.test(descripcion)) {
+        showAlert('alertModalTipo', 'La descripción debe contener al menos una letra.', 'error');
         return;
     }
     try {
@@ -639,7 +646,7 @@ async function guardarNuevoTipo() {
         modalNuevoTipo.hide();
         showAlert('alertContainer', `Tipo "${tipo.codigo}" agregado correctamente.`, 'success');
     } catch {
-        showAlert('alertContainer', 'Error al guardar el tipo. El código puede estar repetido.', 'error');
+        showAlert('alertModalTipo', 'Error al guardar el tipo. El código puede estar repetido.', 'error');
     }
 }
 

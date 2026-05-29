@@ -91,11 +91,12 @@ function editar(id, dni, nombre, apellido, genero, domicilio) {
 function validarConductor() {
     let valido = true;
 
-    const dni = document.getElementById('fDni').value.trim();
-    if (!dni) {
+    const dniRaw = document.getElementById('fDni').value;
+    const dni = dniRaw.trim();
+    if (!dniRaw && !dni) {
         mostrarError('fDni', 'El DNI es obligatorio.');
         valido = false;
-    } else if (!/^\d+$/.test(dni)) {
+    } else if (!dni || !/^\d+$/.test(dniRaw)) {
         mostrarError('fDni', 'El DNI solo puede contener números.');
         valido = false;
     } else {
@@ -125,8 +126,8 @@ function validarConductor() {
     }
 
     const domicilio = document.getElementById('fDomicilio').value.trim();
-    if (domicilio && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\.\,\-]+$/.test(domicilio)) {
-        mostrarError('fDomicilio', 'El domicilio contiene caracteres no válidos.');
+    if (domicilio && (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\.\,\-]+$/.test(domicilio) || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(domicilio))) {
+        mostrarError('fDomicilio', 'El domicilio debe contener al menos una letra.');
         valido = false;
     } else {
         limpiarError('fDomicilio');

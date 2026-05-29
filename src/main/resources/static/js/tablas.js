@@ -230,8 +230,8 @@ async function guardarRuta() {
     if (!nombre) {
         mostrarError('mrNombre', 'El nombre es obligatorio.');
         valido = false;
-    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/.test(nombre)) {
-        mostrarError('mrNombre', 'El nombre solo puede contener letras.');
+    } else if (!/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]+$/.test(nombre)) {
+        mostrarError('mrNombre', 'El nombre solo puede contener letras, números y guiones.');
         valido = false;
     } else {
         limpiarError('mrNombre');
@@ -324,8 +324,8 @@ async function guardarTipoInfraccion() {
     if (!codigo) {
         mostrarError('mtiCodigo', 'El código es obligatorio.');
         valido = false;
-    } else if (!/^[a-zA-Z0-9]+$/.test(codigo)) {
-        mostrarError('mtiCodigo', 'El código solo puede contener letras y números sin espacios.');
+    } else if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(codigo)) {
+        mostrarError('mtiCodigo', 'El código debe contener al menos una letra (Ej: VEL001).');
         valido = false;
     } else {
         limpiarError('mtiCodigo');
@@ -335,8 +335,8 @@ async function guardarTipoInfraccion() {
     if (!descripcion) {
         mostrarError('mtiDesc', 'La descripción es obligatoria.');
         valido = false;
-    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-\.]+$/.test(descripcion)) {
-        mostrarError('mtiDesc', 'La descripción contiene caracteres no válidos.');
+    } else if (!/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-\.]+$/.test(descripcion)) {
+        mostrarError('mtiDesc', 'La descripción debe contener al menos una letra.');;
         valido = false;
     } else {
         limpiarError('mtiDesc');

@@ -90,21 +90,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
+                <div id="alertModal"></div>
                 <input type="hidden" id="itemId">
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">N° Legajo *</label>
-                        <input type="number" class="form-control form-control-sm" id="fLegajo" placeholder="Ej: 1001">
+                        <input type="text" class="form-control form-control-sm" id="fLegajo" placeholder="Ej: 1001" inputmode="numeric">
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">N° Placa *</label>
-                        <input type="number" class="form-control form-control-sm" id="fPlaca" placeholder="Ej: 5001">
+                        <input type="text" class="form-control form-control-sm" id="fPlaca" placeholder="Ej: 5001" inputmode="numeric">
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">DNI *</label>
-                        <input type="number" class="form-control form-control-sm" id="fDni" placeholder="Ej: 28456123">
+                        <input type="text" class="form-control form-control-sm" id="fDni" placeholder="Ej: 28456123" inputmode="numeric">
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="col-md-4">

@@ -91,7 +91,7 @@
             <div class="row g-3 align-items-end mb-3">
                 <div class="col-md-3">
                     <label class="form-label">Buscar por DNI</label>
-                    <input type="number" class="form-control form-control-sm" id="conductorDniBuscar" placeholder="Ej: 30123456">
+                    <input type="text" class="form-control form-control-sm" id="conductorDniBuscar" placeholder="Ej: 30123456" inputmode="numeric">
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-secondary btn-sm w-100" onclick="buscarConductor()">
@@ -103,7 +103,7 @@
             <div class="row g-3">
                 <div class="col-md-2">
                     <label class="form-label">DNI *</label>
-                    <input type="number" class="form-control form-control-sm" id="conductorDni" placeholder="DNI">
+                    <input type="text" class="form-control form-control-sm" id="conductorDni" placeholder="DNI" inputmode="numeric">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Nombre *</label>
@@ -303,6 +303,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <div id="alertModalMarca"></div>
                     <div class="mb-3">
                         <label class="form-label">Nombre de la Marca *</label>
                         <input type="text" class="form-control form-control-sm"
@@ -332,6 +333,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <div id="alertModalModelo"></div>
                     <div class="mb-3">
                         <label class="form-label">Nombre del Modelo *</label>
                         <input type="text" class="form-control form-control-sm"
@@ -361,6 +363,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <div id="alertModalTipo"></div>
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label">Código *</label>
@@ -397,6 +400,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <div id="alertModalRuta"></div>
                     <div class="row g-3">
                         <div class="col-md-7">
                             <label class="form-label">Nombre *</label>

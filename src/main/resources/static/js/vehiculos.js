@@ -108,8 +108,8 @@ function validarVehiculo() {
     if (!dominio) {
         mostrarError('fDominio', 'El dominio es obligatorio.');
         valido = false;
-    } else if (!/^[a-zA-Z0-9]+$/.test(dominio)) {
-        mostrarError('fDominio', 'El dominio solo puede contener letras y números.');
+    } else if (!/^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(dominio)) {
+        mostrarError('fDominio', 'El dominio debe contener al menos una letra (Ej: ABC123).');
         valido = false;
     } else {
         limpiarError('fDominio');
@@ -124,8 +124,9 @@ function validarVehiculo() {
     }
 
     const anio = document.getElementById('fAnio').value.trim();
-    if (anio && !/^\d{4}$/.test(anio)) {
-        mostrarError('fAnio', 'El año debe ser un número de 4 dígitos.');
+    const anioActual = new Date().getFullYear();
+    if (anio && (!/^\d{4}$/.test(anio) || parseInt(anio) < 1900 || parseInt(anio) > anioActual)) {
+        mostrarError('fAnio', `El año debe estar entre 1900 y ${anioActual}.`);
         valido = false;
     } else {
         limpiarError('fAnio');
