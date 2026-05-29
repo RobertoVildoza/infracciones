@@ -72,10 +72,10 @@ public abstract class BaseServiceImpl<E extends Base, D, ID extends Serializable
     @Transactional
     public D update(ID id, D dto) throws Exception {
         try {
-            if (!baseRepository.existsById(id)) {
-                throw new Exception("Registro no encontrado con id: " + id);
-            }
+            E existing = baseRepository.findById(id)
+                    .orElseThrow(() -> new Exception("Registro no encontrado con id: " + id));
             E entity = toEntity(dto);
+            entity.setId(existing.getId());
             return toDTO(baseRepository.save(entity));
         } catch (Exception e) {
             throw new Exception(e.getMessage());

@@ -65,6 +65,7 @@ SELECT 'autoridad1', '$2a$10$8DLqnchJCoT1G7DRePhR8.r3MILhS2RBdfjmQYp49plibF8e0qo
     WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE username = 'autoridad1');
 
 -- Ligar usuario autoridad1 a la autoridad Carlos Rodríguez
+-- Ligar usuario autoridad1 a la autoridad Carlos Rodríguez (legajo 1001)
 UPDATE usuario SET autoridad_id = (
-    SELECT id FROM autoridad_de_constatacion WHERE id_legajo = 1003
+    SELECT id FROM autoridad_de_constatacion WHERE id_legajo = 1001
 ) WHERE username = 'autoridad1';

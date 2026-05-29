@@ -108,13 +108,38 @@ async function buscarConductor() {
 async function cargarLicencias(conductorId) {
     try {
         const licencias = await api.get(`/licencias/conductor/${conductorId}`);
+        const sel = document.getElementById('licenciaClase');
+        const inputId = document.getElementById('licenciaId');
+        const inputVto = document.getElementById('licenciaFechaVto');
+
         if (licencias.length > 0) {
-            const lic = licencias[0];
-            document.getElementById('licenciaId').value = lic.id;
-            document.getElementById('licenciaClase').value = lic.clase;
-            document.getElementById('licenciaFechaVto').value = lic.fechaVto;
-            showAlert('alertLicencia', `Licencia clase ${lic.clase} cargada. Vencimiento: ${formatDate(lic.fechaVto)}`, 'info');
+            // Si hay más de una, poblar el select con todas
+            sel.innerHTML = '';
+            licencias.forEach(lic => {
+                const opt = document.createElement('option');
+                opt.value = lic.id;
+                opt.textContent = `Clase ${lic.clase} — Vto: ${formatDate(lic.fechaVto)}`;
+                opt.dataset.clase = lic.clase;
+                opt.dataset.fechaVto = lic.fechaVto;
+                sel.appendChild(opt);
+            });
+
+            // Precargar los campos con la primera opción
+            const primera = licencias[0];
+            inputId.value = primera.id;
+            inputVto.value = primera.fechaVto;
+
+            sel.onchange = () => {
+                const opt = sel.options[sel.selectedIndex];
+                inputId.value = opt.value;
+                inputVto.value = opt.dataset.fechaVto;
+            };
+
+            showAlert('alertLicencia', `Se encontraron ${licencias.length} licencia(s) para este conductor.`, 'info');
         } else {
+            sel.innerHTML = '';
+            inputId.value = '';
+            inputVto.value = '';
             showAlert('alertLicencia', 'El conductor no tiene licencias registradas. Complete los datos.', 'warning');
         }
     } catch {

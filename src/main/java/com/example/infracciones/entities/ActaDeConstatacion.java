@@ -37,11 +37,11 @@ public class ActaDeConstatacion extends Base {
     @JoinColumn(name = "autoridad_id", nullable = false)
     private AutoridadDeConstatacion autoridad;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vehiculo_id", nullable = false)
     private Vehiculo vehiculo;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "licencia_id", nullable = false)
     private Licencia licencia;
 
